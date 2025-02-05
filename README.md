@@ -1,4 +1,4 @@
-# pwa-tp-vuejs
+# adikeo
 
 ## Project setup
 ```

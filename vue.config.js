@@ -1,7 +1,7 @@
 const { defineConfig } = require("@vue/cli-service");
 
 module.exports = defineConfig({
-  publicPath: "/pwa-tp-vuejs/",
+  publicPath: "/adikeo/",
   devServer: {
     port: 61459,
   },
