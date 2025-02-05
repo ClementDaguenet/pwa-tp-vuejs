@@ -18,7 +18,9 @@
       <!-- Carousel Image-->
       <img :src="photoData[photoIndex]" class="carousel-img" />
       <!-- Arrow > -->
-      <button @click="nextPhoto" class="carousel-btn next-btn">&#10095;</button>
+      <button @click="nextPhoto" class="carousel-btn next-btn">
+        &#10095;
+      </button>
     </div>
     <!-- Take a photo button -->
     <button v-if="isCameraActive" @click="takePhoto" class="btn-trans-purple">
@@ -174,6 +176,7 @@ video {
   width: 100%;
   max-width: 400px;
   border: 2px solid #ccc;
+  transform: scaleX(-1);
 }
 
 .btn-trans-purple {
@@ -228,6 +231,7 @@ video {
   max-height: 300px;
   border: 2px solid #ccc;
   margin: 0 10px;
+  transform: scaleX(-1);
 }
 
 .carousel-btn {
@@ -245,6 +249,7 @@ video {
 
 .prev-btn {
   left: 10px;
+  z-index: 1;
 }
 
 .next-btn {
