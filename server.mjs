@@ -7,10 +7,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = 5000;
+const port = 10000;
 
-app.use((req, res,next) => {
-    console.log(`url demandé : ${req.originalUrl}.`);
+app.use((req, res, next) => {
+    console.log(`Requested URL : ${req.originalUrl}.`);
     next();
 });
 
