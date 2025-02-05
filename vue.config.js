@@ -1,10 +1,7 @@
 const { defineConfig } = require("@vue/cli-service");
 
 module.exports = defineConfig({
-  publicPath: "/adikeo/",
-  devServer: {
-    port: 61459,
-  },
+  publicPath: "/",
   pwa: {
     workboxPluginMode: "InjectManifest",
     workboxOptions: {
