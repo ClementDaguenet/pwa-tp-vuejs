@@ -1,12 +1,7 @@
-/* eslint-disable no-restricted-globals */
+import { precacheAndRoute } from 'workbox-precaching';
 
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js");
-
-self.__WB_MANIFEST = self.__WB_MANIFEST || [];
-
-workbox.setConfig({
-  debug: true,
-});
+// Injecte la liste des fichiers à pré-cacher
+precacheAndRoute(self.__WB_MANIFEST || []);
 
 self.addEventListener("install", (event) => {
     console.log("[Service Worker] Installing Service Worker...");
