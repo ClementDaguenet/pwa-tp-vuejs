@@ -1,19 +1,31 @@
 <template>
   <div id="map" class="map-container"></div>
+  <div class="address-input">
+    <input
+      v-model="localAddress"
+      type="text"
+      placeholder="🗺️"
+      @keyup.enter="addMarker"
+    />
+    <button @click="addMarker" class="btn-add-marker">
+      {{ $t("lang.maps_addMarker") }}
+    </button>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import maplibregl from "maplibre-gl";
 import { useI18n } from "vue-i18n";
 
 export default defineComponent({
   name: "MapComponent",
   setup() {
-    const { t, locale } = useI18n();
+    const { t } = useI18n();
 
-    let marker: maplibregl.Marker | null = null;
     let map: maplibregl.Map | null = null;
+    let marker: maplibregl.Marker | null = null;
+    const localAddress = ref<string>("");
 
     const initializeMap = (latitude: number, longitude: number) => {
       map = new maplibregl.Map({
@@ -23,7 +35,7 @@ export default defineComponent({
         zoom: 13,
       });
 
-      marker = new maplibregl.Marker()
+      marker = new maplibregl.Marker({ color: "red" })
         .setLngLat([longitude, latitude])
         .setPopup(
           new maplibregl.Popup().setHTML(`<b>${t("lang.maps_markerHere")}</b>`)
@@ -31,12 +43,52 @@ export default defineComponent({
         .addTo(map);
     };
 
+    const getCoordinatesFromAddress = async (address: string) => {
+      const encodedAddress = encodeURIComponent(address);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`
+      );
+      const data = await response.json();
+      if (data.length > 0) {
+        return {
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon),
+        };
+      }
+      return null;
+    };
+
+    const addMarker = async () => {
+      if (!localAddress.value.trim()) return;
+
+      const coordinates = await getCoordinatesFromAddress(localAddress.value);
+      if (coordinates) {
+        if (map) {
+          map.flyTo({
+            center: [coordinates.longitude, coordinates.latitude],
+            zoom: 13,
+          });
+
+          if (marker) marker.remove();
+          marker = new maplibregl.Marker({ color: "purple" })
+            .setLngLat([coordinates.longitude, coordinates.latitude])
+            .setPopup(
+              new maplibregl.Popup().setHTML(
+                `<b>${t("lang.maps_markerNew")}</b>`
+              )
+            )
+            .addTo(map);
+        }
+      } else {
+        alert(t("lang.maps_addressNotFound"));
+      }
+    };
+
     onMounted(() => {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            const { latitude, longitude } = position.coords;
-            initializeMap(latitude, longitude);
+            initializeMap(position.coords.latitude, position.coords.longitude);
           },
           () => {
             alert(t("lang.maps_permDenied"));
@@ -47,13 +99,10 @@ export default defineComponent({
       }
     });
 
-    watch(locale, () => {
-      if (marker) {
-        marker.getPopup()?.setHTML(`<b>${t("lang.maps_markerHere")}</b>`);
-      }
-    });
-
-    return {};
+    return {
+      localAddress,
+      addMarker,
+    };
   },
 });
 </script>
@@ -66,5 +115,52 @@ export default defineComponent({
   border-radius: 8px;
   margin-top: 20px;
   left: 5%;
+}
+
+.address-input {
+  margin-top: 20px;
+  text-align: center;
+}
+
+input {
+  width: 75%;
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  text-align: center;
+  font-size: 16px;
+  outline: none;
+  background: #333;
+  color: white;
+  transition: 0.3s;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+input:focus {
+  background: #444;
+  box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.5);
+}
+
+.btn-add-marker {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: rgb(177, 66, 185);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-add-marker:hover {
+  background-color: #812688;
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(177, 66, 185, 0.5);
 }
 </style>

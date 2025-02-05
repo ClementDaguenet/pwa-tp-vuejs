@@ -28,9 +28,12 @@ export const fr = {
     camera_cameraAccessDenied: "L'accès à la caméra est refusé. Merci de l'autoriser.",
 
     maps_title: "Ceci est une page de cartes",
-    maps_markerHere: "Vous êtes ici!",
+    maps_markerHere: "Vous êtes ici !",
+    maps_markerNew: "Vous voulez aller ici !",
     maps_permDenied: "Permission de géolocalisation refusée. Impossible de montrer votre localisation.",
     maps_localDenied: "La géolocalisation n'est pas supportée par votre navigateur.",
+    maps_addressNotFound: "Adresse introuvable",
+    maps_addMarker: "Ajouter un marqueur",
 
     phone_title: "Ceci est une page de téléphone",
     phone_call: "Appeler",
