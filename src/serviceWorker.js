@@ -1,3 +1,13 @@
+/* eslint-disable no-restricted-globals */
+
+importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js");
+
+self.__WB_MANIFEST = self.__WB_MANIFEST || [];
+
+workbox.setConfig({
+  debug: true,
+});
+
 self.addEventListener("install", (event) => {
     console.log("[Service Worker] Installing Service Worker...");
   
