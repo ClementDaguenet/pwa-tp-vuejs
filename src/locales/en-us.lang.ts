@@ -33,5 +33,6 @@ export const en = {
     maps_localDenied: "Geolocation is not supported by your browser.",
 
     phone_title: "This is a phone page",
+    phone_call: "Call",
   },
 };

@@ -33,5 +33,6 @@ export const fr = {
     maps_localDenied: "La géolocalisation n'est pas supportée par votre navigateur.",
 
     phone_title: "Ceci est une page de téléphone",
+    phone_call: "Appeler",
   },
 };

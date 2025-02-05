@@ -196,6 +196,7 @@ video {
 .btn-trans-purple:hover {
   background-color: #812688;
   transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(177, 66, 185, 0.5);
 }
 
 .btn-trans-purple::after {
