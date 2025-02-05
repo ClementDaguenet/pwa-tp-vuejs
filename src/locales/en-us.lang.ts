@@ -34,5 +34,6 @@ export const en = {
 
     phone_title: "This is a phone page",
     phone_call: "Call",
+    phone_vibe: "Vibrate",
   },
 };

@@ -11,13 +11,16 @@
       <input
         type="tel"
         v-model="phoneNumber"
-        placeholder="..."
+        placeholder="📱"
         @input="phoneNumber = phoneNumber.replace(/\D/g, '')"
       />
       <br />
       <a :href="'tel:' + phoneNumber" class="btn-call">{{
         $t("lang.phone_call")
       }}</a>
+      <button @click="vibratePhone" class="btn-vibrate">
+        {{ $t("lang.phone_vibe") }}
+      </button>
     </div>
   </div>
 </template>
@@ -62,6 +65,12 @@ export default defineComponent({
         });
       } else {
         networkType.value = navigator.onLine ? "Online" : "Offline";
+      }
+    };
+
+    const vibratePhone = () => {
+      if ("vibrate" in navigator) {
+        navigator.vibrate(200);
       }
     };
 
@@ -148,4 +157,24 @@ input:focus {
   transform: scale(1.05);
   box-shadow: 0px 4px 15px rgba(177, 66, 185, 0.5);
 }
+
+.btn-vibrate {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-vibrate:hover {
+  background-color: #e68900;
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(255, 152, 0, 0.5);
+}
+
 </style>
