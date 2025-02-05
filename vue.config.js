@@ -3,7 +3,7 @@ const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   publicPath: "/pwa-tp-vuejs/",
   devServer: {
-    port: 5000,
+    port: 61459,
   },
   pwa: {
     workboxPluginMode: "InjectManifest",
