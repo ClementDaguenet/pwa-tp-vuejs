@@ -1,6 +1,5 @@
 import { precacheAndRoute } from 'workbox-precaching';
 
-// Injecte la liste des fichiers à pré-cacher
 precacheAndRoute(self.__WB_MANIFEST || []);
 
 self.addEventListener("install", (event) => {
