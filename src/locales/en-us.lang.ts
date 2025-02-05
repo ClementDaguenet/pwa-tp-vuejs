@@ -28,6 +28,9 @@ export const en = {
     camera_cameraAccessDenied: "Camera access denied. Please authorized it.",
 
     maps_title: "This is a maps page",
+    maps_markerHere: "You are here!",
+    maps_permDenied: "Geolocation permission denied. Cannot display your location.",
+    maps_localDenied: "Geolocation is not supported by your browser.",
 
     phone_title: "This is a phone page",
   },

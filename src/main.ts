@@ -5,6 +5,7 @@ import router from "./router";
 import { createI18n } from "vue-i18n";
 import { en } from "./locales/en-us.lang";
 import { fr } from "./locales/fr-fr.lang";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 const storedLang = localStorage.getItem("language") || "en";
 const i18n = createI18n({
