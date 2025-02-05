@@ -85,6 +85,7 @@ export default defineComponent({
       networkType,
       networkSpeed,
       phoneNumber,
+      vibratePhone,
     };
   },
 });
@@ -176,5 +177,4 @@ input:focus {
   transform: scale(1.05);
   box-shadow: 0px 4px 15px rgba(255, 152, 0, 0.5);
 }
-
 </style>

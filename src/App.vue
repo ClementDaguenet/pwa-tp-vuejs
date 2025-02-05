@@ -108,6 +108,7 @@ nav {
   width: 30px;
   height: 25px;
   cursor: pointer;
+  position: fixed;
 }
 
 .burger-bar {
