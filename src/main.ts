@@ -18,14 +18,16 @@ createApp(App).use(router).use(i18n).mount("#app");
 
 // Check of service worker activity
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("/service-worker.js")
-    .then((registration) => {
-      console.log("Successfully saved Service Worker :", registration);
-    })
-    .catch((error) => {
-      console.log("Error while saving Service Worker :", error);
-    });
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((registration) => {
+        console.log("Successfully saved Service Worker :", registration);
+      })
+      .catch((error) => {
+        console.log("Error while saving Service Worker :", error);
+      });
+  });
 }
 
 // Ask to client to active notifications
