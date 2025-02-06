@@ -241,7 +241,7 @@ export default defineComponent({
 }
 
 .messages {
-  max-height: 80vh;
+  max-height: 60vh;
   overflow-y: auto;
   padding: 10px;
   background: #333;
