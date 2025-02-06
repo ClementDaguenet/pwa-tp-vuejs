@@ -19,11 +19,15 @@
 
       <div class="messages" ref="messagesContainer">
         <div
-          v-for="msg in messages"
+          v-for="msg in filteredMessages"
           :key="msg.dateEmis"
           :class="[
             'message',
-            msg.isSystem ? 'system' : msg.pseudo === pseudo ? 'user' : 'other',
+            msg.categorie === 'INFO'
+              ? 'system'
+              : msg.pseudo === pseudo
+              ? 'user'
+              : 'other',
           ]"
         >
           <div class="message-info">
@@ -44,13 +48,24 @@
         <button @click="sendMessage" class="send-button">
           {{ $t("lang.chat_send") }}
         </button>
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="showSystemMessages" />
+          {{ $t("lang.chat_showSystemMessages") }}
+        </label>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, nextTick } from "vue";
+import {
+  defineComponent,
+  ref,
+  watch,
+  nextTick,
+  computed,
+  onMounted,
+} from "vue";
 import { useI18n } from "vue-i18n";
 import socketIOClient from "socket.io-client";
 
@@ -59,7 +74,7 @@ interface Message {
   dateEmis: string;
   pseudo: string;
   roomId: string;
-  isSystem?: boolean;
+  categorie: string;
 }
 
 export default defineComponent({
@@ -72,6 +87,7 @@ export default defineComponent({
     const isConnected = ref(false);
     const socket = ref<any>(null);
     const newMessage = ref("");
+    const showSystemMessages = ref(false);
     const messagesContainer = ref<HTMLElement | null>(null);
 
     const formatDate = (dateString: string) => {
@@ -79,50 +95,55 @@ export default defineComponent({
       return date.toLocaleTimeString();
     };
 
-    watch(messages, () => {
+    const filteredMessages = computed(() => {
+      return messages.value.filter(
+        (msg) => showSystemMessages.value || msg.categorie !== "INFO"
+      );
+    });
+
+    watch(
+      messages,
+      () => {
+        scrollToBottom();
+        if ("vibrate" in navigator) {
+          navigator.vibrate(200);
+        }
+      },
+      { deep: true }
+    );
+    const scrollToBottom = () => {
       nextTick(() => {
         if (messagesContainer.value) {
-          messagesContainer.value.scrollTop =
-            messagesContainer.value.scrollHeight;
+          messagesContainer.value.scrollTo({
+            top: messagesContainer.value.scrollHeight,
+            behavior: "smooth",
+          });
         }
       });
-    });
+    };
 
     const connectToChat = () => {
       if (!pseudo.value || !roomId.value) return;
 
       socket.value = socketIOClient(
-        "http://mohammedelmehdi.makhlouk.angers.mds-project.fr:40220",
+        "https://mohammedelmehdi.makhlouk.angers.mds-project.fr",
         {
           transports: ["websocket"],
+          reconnection: true,
+          reconnectionAttempts: 5,
+          reconnectionDelay: 2000,
         }
       );
 
       socket.value.on("connect", () => {
-        console.log("Connexion établie avec le serveur !");
-      });
-
-      socket.value.emit("chat-join-room", {
-        pseudo: pseudo.value,
-        roomId: roomId.value,
-      });
-
-      console.log(
-        `${t("lang.chat_connectedToRoom1")} : ${roomId.value} ${t(
-          "lang.chat_connectedToRoom2"
-        )} : ${pseudo.value}`
-      );
-
-      socket.value.on("SYSTEME_MSG", (msg: Message) => {
-        console.log(`${t("lang.chat_msgServer")} :`, msg);
-        messages.value.push({ ...msg, isSystem: true });
+        socket.value.emit("chat-join-room", {
+          pseudo: pseudo.value,
+          roomId: roomId.value,
+        });
       });
 
       socket.value.on("chat-msg", (msg: Message) => {
-        console.log(`${t("lang.chat_msgClient")} :`, msg);
-        if (msg.roomId === roomId.value) {
-          messages.value = [...messages.value, msg];
-        }
+        messages.value.push(msg);
       });
 
       isConnected.value = true;
@@ -132,23 +153,13 @@ export default defineComponent({
       if (!newMessage.value.trim()) return;
 
       const messageData = {
-        msg: newMessage.value,
+        content: newMessage.value,
+        dateEmis: new Date().toISOString(),
+        pseudo: pseudo.value,
         roomId: roomId.value,
+        categorie: "MESSAGE",
       };
-      console.log(`${t("lang.chat_msgSending")} :`, messageData);
-
       socket.value.emit("chat-msg", messageData);
-
-      messages.value = [
-        ...messages.value,
-        {
-          content: newMessage.value,
-          dateEmis: new Date().toISOString(),
-          pseudo: pseudo.value,
-          roomId: roomId.value,
-        },
-      ];
-
       newMessage.value = "";
     };
 
@@ -163,18 +174,12 @@ export default defineComponent({
           roomId: roomId.value,
         });
         messages.value = [];
-
-        messages.value.push({
-          content: `${t("lang.chat_joinedRoom")} ${roomId.value}.`,
-          dateEmis: new Date().toISOString(),
-          pseudo: "Système",
-          roomId: roomId.value,
-          isSystem: true,
-        });
-
-        console.log(`${t("lang.chat_changingRoom")} : ${roomId.value}`);
       }
     };
+
+    onMounted(() => {
+      scrollToBottom();
+    });
 
     return {
       messages,
@@ -186,6 +191,8 @@ export default defineComponent({
       isConnected,
       connectToChat,
       updateRoom,
+      showSystemMessages,
+      filteredMessages,
     };
   },
 });
@@ -194,6 +201,7 @@ export default defineComponent({
 <style scoped>
 .chat-container {
   width: 90%;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #1f1f1f;
@@ -233,26 +241,32 @@ export default defineComponent({
 }
 
 .messages {
-  max-height: 60vh;
-  overflow-y: scroll;
-  margin-bottom: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
   padding: 10px;
-  background: #fff;
+  background: #333;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-bottom: 20px;
 }
 
 .message {
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  max-width: 70%;
+  padding: 10px 15px;
+  border-radius: 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  word-wrap: break-word;
+  font-size: 14px;
+  position: relative;
 }
 
 .message-info {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #888;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .author {
@@ -261,6 +275,8 @@ export default defineComponent({
 
 .date {
   font-style: italic;
+  font-size: 11px;
+  margin-left: 10px;
 }
 
 .content {
@@ -271,18 +287,24 @@ export default defineComponent({
 .user {
   background-color: #63217f;
   color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 5px;
 }
 
 .system {
   background-color: #ffc107;
+  color: #333;
   text-align: center;
   font-weight: bold;
-  color: #333;
+  align-self: center;
+  max-width: 90%;
 }
 
 .other {
-  background-color: #87cefa;
+  background-color: #3b93c9;
   color: white;
+  align-self: flex-start;
+  border-bottom-left-radius: 5px;
 }
 
 .input-container {
@@ -295,7 +317,7 @@ export default defineComponent({
 }
 
 .message-input {
-  width: 50%;
+  width: 60%;
   max-width: 400px;
   padding: 12px;
   border-radius: 25px;
@@ -313,5 +335,17 @@ export default defineComponent({
   border-radius: 20px;
   padding: 12px 20px;
   cursor: pointer;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: white;
+  accent-color: #ffc107;
+}
+
+.checkbox-label input {
+  margin-right: 5px;
 }
 </style>

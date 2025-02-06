@@ -29,6 +29,7 @@ export const en = {
     chat_connectedToRoom1: "Connected to channel",
     chat_connectedToRoom2: "with pseudo",
     chat_connectedToRoom3: "joined the channel",
+    chat_showSystemMessages: "Show system messages",
 
     camera_takePhoto: "Take a photo",
     camera_deactivateCamera: "Deactivate camera",
