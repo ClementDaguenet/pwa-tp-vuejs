@@ -3,30 +3,46 @@
     <!-- Navbar burger -->
     <nav>
       <div class="burger-menu" @click="toggleMenu">
-        <div :class="{'burger-bar': true, 'open': menuOpen}"></div>
-        <div :class="{'burger-bar': true, 'open': menuOpen}"></div>
-        <div :class="{'burger-bar': true, 'open': menuOpen}"></div>
+        <div :class="{ 'burger-bar': true, open: menuOpen }"></div>
+        <div :class="{ 'burger-bar': true, open: menuOpen }"></div>
+        <div :class="{ 'burger-bar': true, open: menuOpen }"></div>
       </div>
-      
+
       <!-- Menu items with background -->
-      <div class="menu-background" :class="{ 'open': menuOpen }"></div>
-      <div class="menu-items" :class="{ 'open': menuOpen }">
-        <router-link to="/" @click="closeMenu">{{ $t("lang.menu_home") }}</router-link>
-        <router-link to="/chat" @click="closeMenu">{{ $t("lang.menu_chat") }}</router-link>
-        <router-link to="/camera" @click="closeMenu">{{ $t("lang.menu_camera") }}</router-link>
-        <router-link to="/maps" @click="closeMenu">{{ $t("lang.menu_maps") }}</router-link>
-        <router-link to="/phone" @click="closeMenu">{{ $t("lang.menu_phone") }}</router-link>
+      <div class="menu-background" :class="{ open: menuOpen }"></div>
+      <div class="menu-items" :class="{ open: menuOpen }">
+        <router-link to="/" @click="closeMenu">{{
+          $t("lang.menu_home")
+        }}</router-link>
+        <router-link to="/chat" @click="closeMenu">{{
+          $t("lang.menu_chat")
+        }}</router-link>
+        <router-link to="/camera" @click="closeMenu">{{
+          $t("lang.menu_camera")
+        }}</router-link>
+        <router-link to="/maps" @click="closeMenu">{{
+          $t("lang.menu_maps")
+        }}</router-link>
+        <router-link to="/phone" @click="closeMenu">{{
+          $t("lang.menu_phone")
+        }}</router-link>
       </div>
     </nav>
-
-    <transition name="fade" mode="out-in">
-      <router-view />
-    </transition>
+    
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
 
     <!-- Language Switcher -->
     <button @click="toggleLanguage" class="language-btn">
       <img
-        :src="currentLanguage === 'en' ? '/img/flags/en-us.png' : '/img/flags/fr-fr.png'"
+        :src="
+          currentLanguage === 'en'
+            ? '/img/flags/en-us.png'
+            : '/img/flags/fr-fr.png'
+        "
       />
     </button>
   </div>
@@ -44,7 +60,7 @@ export default defineComponent({
     // Initially set the locale based on localStorage or default to english
     const storedLang = localStorage.getItem("language") || "en";
     locale.value = storedLang;
-    
+
     watch(
       () => locale.value, // Watch for changes in the language
       (newLang) => {
@@ -195,4 +211,3 @@ nav {
   height: 20px;
 }
 </style>
-
