@@ -13,7 +13,7 @@ Une simple page d'accueil sur laquelle il est possible d'accéder au menu burger
 
 ### [Tchat](https://clement.daguenet.angers.mds-project.fr/#/chat)
 
-Un client tchat créé sur une base SocketIO qui doit respecter un json-schema, il est possible de se connecter à un salon avec un pseudo puis d'envoyer et de recevoir des messages.
+Un client tchat créé sur une base SocketIO qui doit respecter un json-schema, il est possible de se connecter à un salon avec un pseudo puis d'envoyer et de recevoir des messages, qui occurrent une vibration.
 
 ### [Caméra](https://clement.daguenet.angers.mds-project.fr/#/camera)
 
