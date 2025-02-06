@@ -65,6 +65,7 @@ import {
   nextTick,
   computed,
   onMounted,
+  onBeforeUnmount,
 } from "vue";
 import { useI18n } from "vue-i18n";
 import socketIOClient from "socket.io-client";
@@ -102,7 +103,7 @@ export default defineComponent({
     });
 
     watch(
-      messages,
+      filteredMessages,
       () => {
         scrollToBottom();
         if ("vibrate" in navigator) {
@@ -113,12 +114,12 @@ export default defineComponent({
     );
     const scrollToBottom = () => {
       nextTick(() => {
-        if (messagesContainer.value) {
-          messagesContainer.value.scrollTo({
-            top: messagesContainer.value.scrollHeight,
-            behavior: "smooth",
-          });
-        }
+        requestAnimationFrame(() => {
+          if (messagesContainer.value) {
+            messagesContainer.value.scrollTop =
+              messagesContainer.value.scrollHeight;
+          }
+        });
       });
     };
 
@@ -178,6 +179,18 @@ export default defineComponent({
     };
 
     onMounted(() => {
+      nextTick(scrollToBottom);
+
+      if (messagesContainer.value) {
+        observer.observe(messagesContainer.value, { childList: true });
+      }
+    });
+
+    onBeforeUnmount(() => {
+      observer.disconnect();
+    });
+
+    const observer = new MutationObserver(() => {
       scrollToBottom();
     });
 
