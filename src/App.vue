@@ -12,7 +12,7 @@
       <div class="menu-background" :class="{ 'open': menuOpen }"></div>
       <div class="menu-items" :class="{ 'open': menuOpen }">
         <router-link to="/" @click="closeMenu">{{ $t("lang.menu_home") }}</router-link>
-        <router-link to="/about" @click="closeMenu">{{ $t("lang.menu_about") }}</router-link>
+        <router-link to="/chat" @click="closeMenu">{{ $t("lang.menu_chat") }}</router-link>
         <router-link to="/camera" @click="closeMenu">{{ $t("lang.menu_camera") }}</router-link>
         <router-link to="/maps" @click="closeMenu">{{ $t("lang.menu_maps") }}</router-link>
         <router-link to="/phone" @click="closeMenu">{{ $t("lang.menu_phone") }}</router-link>

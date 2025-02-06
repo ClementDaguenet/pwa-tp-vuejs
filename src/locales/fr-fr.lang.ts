@@ -1,7 +1,7 @@
 export const fr = {
   lang: {
     menu_home: "Accueil",
-    menu_about: "À propos",
+    menu_chat: "Tchat",
     menu_camera: "Caméra",
     menu_maps: "Cartes",
     menu_phone: "Téléphone",
@@ -17,7 +17,10 @@ export const fr = {
     home_linkTwitter: "Twitter",
     home_linkNews: "Nouvelles",
 
-    about_title: "Ceci est une page d'à propos",
+    chat_title: "Ceci est une page de tchat",
+    chat_send: "Envoyer",
+    chat_msgServer: "Message du serveur",
+    chat_msgClient: "Message du client",
 
     camera_takePhoto: "Prendre une photo",
     camera_deactivateCamera: "Désactiver la caméra",

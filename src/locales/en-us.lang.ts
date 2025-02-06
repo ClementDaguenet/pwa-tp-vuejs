@@ -1,7 +1,7 @@
 export const en = {
   lang: {
     menu_home: "Home",
-    menu_about: "About",
+    menu_chat: "Chat",
     menu_camera: "Camera",
     menu_maps: "Maps",
     menu_phone: "Phone",
@@ -17,7 +17,10 @@ export const en = {
     home_linkTwitter: "Twitter",
     home_linkNews: "News",
 
-    about_title: "This is an about page",
+    chat_title: "This is a chat page",
+    chat_send: "Send",
+    chat_msgServer: "Message from server",
+    chat_msgClient: "Message from client",
 
     camera_takePhoto: "Take a photo",
     camera_deactivateCamera: "Deactivate camera",
